@@ -1,3 +1,8 @@
+/*Developer's Name: Anushka Kaushalya De Silva*/
+/*Developer's SAIT ID: 000680968*/
+/*Project Name: Threaded Workshop 03*/
+/*Class Name: customer_form_EDIT_DELETE.java*/
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -66,12 +71,15 @@ public class customer_form_EDIT_DELETE extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	//Defines Connection as conn variables
 	static Connection conn = null;
 	
 	public customer_form_EDIT_DELETE() {
 		
+		//Assign Database connection to conn variable
 		conn = travelExpertsConnectionDB .dbConnection();
 		
+		//All the Attributes which listed on Form describes its attributes here
 		setTitle("Customer Modification");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 652, 491);
@@ -188,6 +196,7 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		contentPane.add(label_10);
 		
 		btnUpdate = new JButton("UPDATE");
+		//Action Listner  for UPDATE button which perform update functionality with Customer's Data
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Customer customer = new Customer();
@@ -199,11 +208,13 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		contentPane.add(btnUpdate);
 		
 		btnDelete = new JButton("DELETE");
+		//Action Listner  for DELETE button which perform Delete functionality with Customer's Data
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//JOptionPane.OK_CANCEL_OPTION(null, "Confirm to Delete this Customer Information?");
 				int dialogButton = JOptionPane.YES_NO_OPTION;
+				//Prompt Message whether user want to delete certain customer or not
 				int dialogResult = JOptionPane.showConfirmDialog (null, "Confirm to Delete this Customer Information?","Warning",dialogButton);
+				//If option yes, then this will call method which listed below
 				if(dialogResult == JOptionPane.YES_OPTION){
 					Customer customer = new Customer();
 					DeleteCustomerInfo(customer);
@@ -292,16 +303,20 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		txtCustPasswordED.setBounds(478, 355, 160, 19);
 		contentPane.add(txtCustPasswordED);
 	}
+	//public method which load Customer Data into the Forms
 	public static void loadData()
 	{
 		try 
 		{
 			//Defines Result Sheet with corresponding PL/ SQL Statement
+			//Defines Statement
 			Statement stmt = conn.createStatement();
+			//Defines Result Sheet
 			ResultSet rs = null;
+			//Execute Statement with SQL Statemtn to bring customer's information into Result sheet
 			rs = stmt.executeQuery("select * from customers");
 						
-			//While loop to insert all data into combo box from Database
+			//While loop to insert all Customer data into different text boxes which customer is combo box from Database
 			while (rs.next())
 			{
 				firstName = rs.getString("CustFirstName");
@@ -316,6 +331,7 @@ public class customer_form_EDIT_DELETE extends JFrame {
 			System.out.println(e1);
 		}
 	}
+	//Enable all fields for edit functionality
 	private void setEnableText()
 	{
 		txtCustFNameED.setEnabled(true);
@@ -333,6 +349,7 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		txtAgtNoED.setEnabled(false);
 		btnUpdate.setEnabled(true);
 	}
+	//Disable all fields after editing fields
 	private void setDisableText()
 	{
 		txtCustFNameED.setEnabled(false);
@@ -351,6 +368,7 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		btnUpdate.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
+	//Check Validity of each and every input from the form
 	public boolean validateData(){
 		return validate.isNumber(txtCustHomePhoneED.getText()) &&
 				validate.isNumber(txtCustBusPhoneED.getText()) &&
@@ -364,7 +382,9 @@ public class customer_form_EDIT_DELETE extends JFrame {
 				validate.isPresent(txtCustUserNameED.getText())&&
 				validate.isPresent(txtCustPasswordED.getText());
 	}
+	//Update Customer Information Method
 	public void UpdateCustomerInfo(Customer customer){
+		//Setting up Customer's newly updated into its attributes
 		customer.setCustomerID((Integer.parseInt(txtCustIDED.getText())));
 		customer.setCustFirstName(txtCustFNameED.getText());
 		customer.setCustLastName(txtCustLNameED.getText());
@@ -379,16 +399,23 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		customer.setAgentId(txtAgtNoED.getText());
 		customer.setUserName(txtCustUserNameED.getText());
 		customer.setPassword(txtCustPasswordED.getText());
+		
+		//Check Validity of newly entered Data
 		validateData();
+		
+		//Pass whole Customer Class with Data into UpdateCustomer method in CustomerDB Class
 		customerDB.UpdateCustomer(customer);
 		setDisableText();
 	}
+	//Public method which it deletes Customer Information
 	public void DeleteCustomerInfo(Customer customer){
+		//Pass the Customer ID to which it need to delete from the Database
 		customer.setCustomerID(Integer.parseInt(txtCustIDED.getText()));
 		customerDB.DeleteCustomer(customer);
 		clearData();
 		cmbBoxCustName.revalidate();
 	}
+	//Clear Textfields after Delete Method called upon
 	public void clearData(){
 		txtCustFNameED.setText("");
 		txtCustLNameED.setText("");
@@ -403,6 +430,7 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		txtCustUserNameED.setText("");
 		txtCustPasswordED.setText("");
 	}
+	//Load Customer's information into appropriate text boxes when selecting customer's name from combo box
 	private void loadDataIntoTextBoxes() {
 		// TODO Auto-generated method stub
 		try
@@ -441,6 +469,5 @@ public class customer_form_EDIT_DELETE extends JFrame {
 		}catch(SQLException ex){
 			System.out.println(ex);
 		}
-		
 	}
 }

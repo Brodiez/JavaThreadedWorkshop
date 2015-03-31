@@ -1,3 +1,8 @@
+/*Developer's Name: Anushka Kaushalya De Silva*/
+/*Developer's SAIT ID: 000680968*/
+/*Project Name: Threaded Workshop 03*/
+/*Class Name: customer_form_NEW.java*/
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
@@ -26,6 +31,7 @@ import java.awt.event.ActionEvent;
 
 public class customer_form_NEW extends JFrame {
 
+	//Defined Textboxes which used in the Form for access by different methods in this class 
 	private JPanel contentPane;
 	private JTextField txtCustFNameNEW;
 	private JTextField txtCustLNameNEW;
@@ -42,6 +48,7 @@ public class customer_form_NEW extends JFrame {
 	private JButton btnClear;
 	private JButton btnExit;
 	
+	//Define attributes for get Agent's ID by using Agent's nmae
 	private static String firstName;
 	private static String lastName;
 	private static String fullName;
@@ -51,6 +58,7 @@ public class customer_form_NEW extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	//Main Method where Application Loads
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -77,8 +85,10 @@ public class customer_form_NEW extends JFrame {
 	
 	public customer_form_NEW() {
 		
+		//Defines Database Connection
 		conn = travelExpertsConnectionDB .dbConnection();
 		
+		//Defines all The Attributes which declares in the form including Labels, Textboxes, Buttons and Combo Boxes
 		setTitle("New Customer Entery");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 630, 498);
@@ -196,6 +206,8 @@ public class customer_form_NEW extends JFrame {
 		contentPane.add(cmbCustAgtNameNEW);
 		
 		btnSave = new JButton("SAVE");
+		//Action Listener for SAVE button where it calls public/ private method to insert Customer Info in to Database
+		//After going through ValidateData method
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(validateData()){
@@ -208,6 +220,8 @@ public class customer_form_NEW extends JFrame {
 		contentPane.add(btnSave);
 		
 		btnClear = new JButton("CLEAR");
+		//Action Listener for CLEAR button where it calls public/ private method to Clear Customer Info from Textboxes
+		//in the text boxes
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearData();				
@@ -217,6 +231,7 @@ public class customer_form_NEW extends JFrame {
 		contentPane.add(btnClear);
 		
 		btnExit = new JButton("EXIT");
+		//Action Listener for EXIT button which it calls exit method of form
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -245,30 +260,32 @@ public class customer_form_NEW extends JFrame {
 		txtCustPasswordNEW.setBounds(442, 346, 160, 19);
 		contentPane.add(txtCustPasswordNEW);
 	}
+	//Public method which bring agent name list into form's combo box
 	public static void agentList(){
 		ResultSet rs = null;
 		try 
 		{
-			
-			//Defines Result Sheet with corresponding PL/ SQL Statement
+			//Defines Result Sheet with corresponding SQL Statement
 			Statement stmt = conn.createStatement();
 			rs = stmt.executeQuery("select * from agents");
 			
 			//While loop to insert all data into combo box from Database
 			while (rs.next())
 			{
+				//Set Agent's First Name and Last Name into two different local variables and add names into combo box after
+				//Concatenate both names
 				firstName = rs.getString("agtfirstname");
 				lastName = rs.getString ("agtlastname");
 				fullName = firstName +" "+ lastName;
 				cmbCustAgtNameNEW.addItem(fullName);			
 			}
-			//firstName = (String)comboBoxAgtNames.getSelectedItem();
 		} catch (SQLException e1) 
 		{
 			// TODO Auto-generated catch block
 			System.out.println(e1);
 		}
 	}
+	//Get all the country name list into Combo Box method by using Locale methods
 	public static void countryList(){
 		
 		List<String> countries = new ArrayList<>();
@@ -279,6 +296,7 @@ public class customer_form_NEW extends JFrame {
 	      cmbCustCountryNEW.addItem(countryName);
 	    }
 	}
+	//public method which disable all input components
 	public void disableInputs(){
 		txtCustFNameNEW.setEnabled(false);
 		txtCustLNameNEW.setEnabled(false);
@@ -295,9 +313,9 @@ public class customer_form_NEW extends JFrame {
 		btnSave.setEnabled(false);
 		btnClear.setEnabled(false);
 		cmbCustAgtNameNEW.setEnabled(false);
-		cmbCustCountryNEW.setEnabled(false);
-		
+		cmbCustCountryNEW.setEnabled(false);	
 	}
+	//Public method which clear data in the text boxes
 	public void clearData(){
 		txtCustFNameNEW.setText("");
 		txtCustLNameNEW.setText("");
@@ -312,6 +330,7 @@ public class customer_form_NEW extends JFrame {
 		txtCustUserNameNEW.setText("");
 		txtCustPasswordNEW.setText("");
 	}
+	//Public method which validate all the inputs before send them to Database
 	public boolean validateData(){
 		return validate.isNumber(txtCustHomePhoneNEW.getText()) &&
 				validate.isNumber(txtCustBusPhoneNEW.getText()) &&
@@ -325,12 +344,14 @@ public class customer_form_NEW extends JFrame {
 				validate.isPresent(txtCustUserNameNEW.getText())&&
 				validate.isPresent(txtCustPasswordNEW.getText());
 	}
-	
+	//Public method which call AddCustomer method from CustomerDB class and insert info into Database
 	public void PutCustomerData(Customer customer)
 	{
-		validate();
+		//Call method to disable input components
 		disableInputs();
+		//This try catch method to retrieve Agent's ID whose newly adding Customer Belong to
 		try{
+			//Select SQL Statement
 			PreparedStatement pstmt = conn.prepareStatement("select AGENTID from agents where agtfirstname=?");
 			
 			//Retrieve agent's name from combo box, then split the name, get the agent's first name of agent and passing value to select Statment
@@ -343,11 +364,13 @@ public class customer_form_NEW extends JFrame {
 			ResultSet rs1 = pstmt.executeQuery();
 			while(rs1.next())
 			{
+				//Fill Customer Class's attribute agentId as selected Agent's ID
 				customer.setAgentId(rs1.getString("AGENTID"));
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
+		//Set up Customer's Attributes according to the inputs
 		customer.setCustFirstName(txtCustFNameNEW.getText());
 		customer.setCustLastName(txtCustLNameNEW.getText());
 		customer.setCustAddress(txtCustAddressNEW.getText());
@@ -363,27 +386,13 @@ public class customer_form_NEW extends JFrame {
 		clearData();
 		try
 		{
+			//Pass Customer's Values into AddCustomer Method of CustomerDB Class
 			customerDB.AddCustomer(customer);
 		}catch(Exception ex){
 			System.out.print(ex);
 		}
-		String successMsg = "Customer Succussfully Added! Customer No Is " + customer.getCustomerID();
+		//Finally Message after inserting Info into Database
+		String successMsg = "Customer Succussfully Added!";
 		JOptionPane.showMessageDialog(null, successMsg);
-		
-		System.out.println(customer.getCustomerID());
-		System.out.println(customer.getCustFirstName());
-		System.out.println(customer.getCustLastName());
-		System.out.println(customer.getCustAddress());
-		System.out.println(customer.getCustCity());
-		System.out.println(customer.getCustPostal());
-		System.out.println(customer.getCustProv());
-		System.out.println(customer.getCustCity());
-		System.out.println(customer.getCustCountry());
-		System.out.println(customer.getCustHomePhone());
-		System.out.println(customer.getCustBusPhone());
-		System.out.println(customer.getCustEmail());
-		System.out.println(customer.getAgentId());
-		System.out.println(customer.getUserName());
-		System.out.println(customer.getPassword());
 	}
 }

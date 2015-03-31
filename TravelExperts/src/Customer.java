@@ -20,7 +20,7 @@ public class Customer
 	private String agentId;
 	private String userName;
 	private String password;
-	
+		
 	//Getters and Setters for each and every above defined attributes 
 	public int getCustomerID() {
 		return customerID;
