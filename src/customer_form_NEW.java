@@ -332,17 +332,17 @@ public class customer_form_NEW extends JFrame {
 	}
 	//Public method which validate all the inputs before send them to Database
 	public boolean validateData(){
-		return validate.isNumber(txtCustHomePhoneNEW.getText()) &&
-				validate.isNumber(txtCustBusPhoneNEW.getText()) &&
-				validate.isPresent(txtCustFNameNEW.getText()) &&
-				validate.isPresent(txtCustLNameNEW.getText())&&
-				validate.isPresent(txtCustAddressNEW.getText())&&
-				validate.isPresent(txtCustCityNEW.getText())&&
-				validate.isPresent(txtCustPostalCodeNEW.getText())&&
-				validate.isPresent(txtCustProvNEW.getText())&&
-				validate.isPresent(txtCustEMailNEW.getText())&&
-				validate.isPresent(txtCustUserNameNEW.getText())&&
-				validate.isPresent(txtCustPasswordNEW.getText());
+		return Validation.isNumber(txtCustHomePhoneNEW) &&
+				Validation.isNumber(txtCustBusPhoneNEW) &&
+				Validation.isPresent(txtCustFNameNEW) &&
+				Validation.isPresent(txtCustLNameNEW)&&
+				Validation.isPresent(txtCustAddressNEW)&&
+				Validation.isPresent(txtCustCityNEW)&&
+				Validation.isPresent(txtCustPostalCodeNEW)&&
+				Validation.isPresent(txtCustProvNEW)&&
+				Validation.isPresent(txtCustEMailNEW)&&
+				Validation.isPresent(txtCustUserNameNEW)&&
+				Validation.isPresent(txtCustPasswordNEW);
 	}
 	//Public method which call AddCustomer method from CustomerDB class and insert info into Database
 	public void PutCustomerData(Customer customer)

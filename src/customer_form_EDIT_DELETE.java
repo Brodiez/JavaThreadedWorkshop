@@ -370,17 +370,17 @@ public class customer_form_EDIT_DELETE extends JFrame {
 	}
 	//Check Validity of each and every input from the form
 	public boolean validateData(){
-		return validate.isNumber(txtCustHomePhoneED.getText()) &&
-				validate.isNumber(txtCustBusPhoneED.getText()) &&
-				validate.isPresent(txtCustFNameED.getText()) &&
-				validate.isPresent(txtCustLNameED.getText())&&
-				validate.isPresent(txtCustAddressED.getText())&&
-				validate.isPresent(txtCustCityED.getText())&&
-				validate.isPresent(txtCustPostalED.getText())&&
-				validate.isPresent(txtCustProvED.getText())&&
-				validate.isPresent(txtCustEMailED.getText())&&
-				validate.isPresent(txtCustUserNameED.getText())&&
-				validate.isPresent(txtCustPasswordED.getText());
+		return Validation.isNumber(txtCustHomePhoneED) &&
+				Validation.isNumber(txtCustBusPhoneED) &&
+				Validation.isPresent(txtCustFNameED) &&
+				Validation.isPresent(txtCustLNameED)&&
+				Validation.isPresent(txtCustAddressED)&&
+				Validation.isPresent(txtCustCityED)&&
+				Validation.isPresent(txtCustPostalED)&&
+				Validation.isPresent(txtCustProvED)&&
+				Validation.isPresent(txtCustEMailED)&&
+				Validation.isPresent(txtCustUserNameED)&&
+				Validation.isPresent(txtCustPasswordED);
 	}
 	//Update Customer Information Method
 	public void UpdateCustomerInfo(Customer customer){
