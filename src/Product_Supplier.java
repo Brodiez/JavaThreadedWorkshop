@@ -48,6 +48,13 @@ public class Product_Supplier {
 	public void setProdName(String prodName) {
 		ProdName = prodName;
 	}
+
+	@Override
+	public String toString() {
+		return SupName;
+	}
+	
+	
 	
 	
 }

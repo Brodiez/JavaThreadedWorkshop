@@ -21,6 +21,11 @@ public class Product {
 	public void setProdName(String prodName) {
 		ProdName = prodName;
 	}
+
+	@Override
+	public String toString() {
+		return ProdName;
+	}
 	
 	
 

@@ -77,11 +77,11 @@ public class PackagesDB {
 
 	}
 	
-	public static TableModel getTableModel() throws ClassNotFoundException, SQLException {
+	public static DefaultTableModel getTableModel() throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
 		String sql = "Select PackageId as ID, PkgName as Name, PkgDesc as Description, PkgBasePrice as BasePrice, PkgAgencyCommission as Commission FROM Packages";
-		TableModel packages;
+		DefaultTableModel packages;
 
 		
 		try {
@@ -95,6 +95,50 @@ public class PackagesDB {
 		finally { conn.close(); }
 
 	}
+	
+	public static DefaultTableModel getProdSupp(int packId) throws ClassNotFoundException, SQLException {
+		
+		Connection conn = TravelExpertsDB.Connect();
+		String sql = "Select ProdName AS Products, SupName AS Suppliers " + 
+				"FROM Suppliers s, products_suppliers ps, products p, packages_products_suppliers pps " +
+				"where s.SupplierId = ps.SupplierId AND ps.ProductId = p.ProductId AND ps.ProductSupplierId = pps.ProductSupplierId AND PackageId = " + packId;
+		DefaultTableModel prodsupp;
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			prodsupp = resultSetToTableModel(rs);
+			return prodsupp;
+		}
+		finally { conn.close(); }
+	}
+	
+	public static Vector<Packages_Products_Suppliers> getPackProdSupp(int packid) throws ClassNotFoundException, SQLException {
+		
+		Vector<Packages_Products_Suppliers> packProdSupp = new Vector<>();
+		Connection conn = TravelExpertsDB.Connect();
+		String sql = "SELECT * from Packages_Products_Suppliers WHERE PackageId = " + packid;
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				Packages_Products_Suppliers pps = new Packages_Products_Suppliers();
+				pps.setPackageId(rs.getInt("PackageId"));
+				pps.setProductSupplierId(rs.getInt("ProductSupplierId"));
+				packProdSupp.add(pps);
+			}
+			rs.close();
+			
+		}
+		finally { conn.close(); }
+		
+		return packProdSupp;
+	}
+	
 	
 	public static Package getPackage(int PackageId) throws ClassNotFoundException, SQLException {
 		Package pack = new Package();
@@ -121,27 +165,24 @@ public class PackagesDB {
 	}
 	
 	
-	public static void addPackage(Package pack) throws ClassNotFoundException, SQLException {
+	public static int addPackage(Package pack) throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
-		String sql = "INSERT INTO Packages (PkgName, PkgStartDate, PkgEndDate, PkgDesc, PkgBasePrice, PkgAgencyCommission) VALUES(?, ?, ?, ?, ?, ?)";
+		//String sql = "INSERT INTO Packages (PkgName, PkgStartDate, PkgEndDate, PkgDesc, PkgBasePrice, PkgAgencyCommission) VALUES(?, ?, ?, ?, ?, ?)";
 		
 		try {
-			//String sql = "INSERT INTO Packages Values('" + pack.getPkgName() + "', " + pack.getPkgStartDate() + ", " + pack.getPkgEndDate() + 
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, pack.getPkgName());
-			stmt.setDate(2, pack.getPkgStartDate());
-			stmt.setDate(3, pack.getPkgEndDate());
-			stmt.setString(4, pack.getPkgDesc());
-			stmt.setBigDecimal(5, pack.getPkgBasePrice());
-			stmt.setBigDecimal(6, pack.getPkgAgencyCommission());
-			stmt.executeUpdate();
-			//ResultSet rs = stmt.getGeneratedKeys();
-//			rs.next();
-//			int id = rs.getInt("PackageId");
+			String sql = "INSERT INTO Packages (PkgName, PkgStartDate, PkgEndDate, PkgDesc, PkgBasePrice, PkgAgencyCommission) Values('" + 
+					pack.getPkgName() + "', '" + pack.getPkgStartDate() + "', '" + pack.getPkgEndDate() + 
+					"', '" + pack.getPkgDesc() + "', " + pack.getPkgBasePrice() + ", " + pack.getPkgAgencyCommission() + ")";
 			
-			//rs.close();
-			//return id;
+			Statement stmt = conn.createStatement();
+			stmt.execute(sql, Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			int id = rs.getInt(1);
+			
+			rs.close();
+			return id;
 		}
 		finally { conn.close(); }
 
@@ -223,7 +264,7 @@ public class PackagesDB {
 		
 		Vector<Product_Supplier> suppliers = new Vector<>();
 		Connection conn = TravelExpertsDB.Connect();
-		String sql = "SELECT * FROM Suppliers s JOIN Products_Suppliers ps ON s.SupplierId = ps.SupplierId WHERE ProductId = " + productId;
+		String sql = "SELECT * FROM Suppliers s, Products_Suppliers ps, Products p WHERE s.SupplierId = ps.SupplierId AND ps.ProductId = p.ProductId AND ps.ProductId = " + productId;
 		
 		
 		try {
@@ -236,6 +277,7 @@ public class PackagesDB {
 				s.setSupName(rs.getString("SupName"));
 				s.setProductSupplierId(rs.getInt("ProductSupplierId"));
 				s.setProductId(rs.getInt("ProductId"));
+				s.setProdName(rs.getString("ProdName"));
 				suppliers.add(s);
 			}
 			rs.close();
@@ -245,10 +287,10 @@ public class PackagesDB {
 		
 	}
 	
-	public static void addPackProductSupp(int PackageId, int ProductSupplierId) throws ClassNotFoundException, SQLException {
+	public static void addPackProductSupp(Packages_Products_Suppliers packProdSupp) throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
-		String sql = "INSERT INTO Packages_Products_Suppliers VALUES(" + PackageId + ", " + ProductSupplierId + ")";
+		String sql = "INSERT INTO Packages_Products_Suppliers VALUES(" + packProdSupp.getPackageId() + ", " + packProdSupp.getProductSupplierId() + ")";
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -258,11 +300,11 @@ public class PackagesDB {
 		finally { conn.close(); }
 	}
 	
-	public static boolean deletePackProductSupplier(int PackageId, int ProductSupplierId) throws ClassNotFoundException, SQLException {
+	public static boolean deletePackProductSupplier(Packages_Products_Suppliers packProdSupp) throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
 		String sql = "DELETE FROM Packages_Products_Suppliers "
-				+ "WHERE PackageId = " + PackageId + " AND ProductSupplierId = " + ProductSupplierId;
+				+ "WHERE PackageId = " + packProdSupp.getPackageId() + " AND ProductSupplierId = " + packProdSupp.getProductSupplierId();
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -275,7 +317,7 @@ public class PackagesDB {
 		finally { conn.close(); }
 	}
 	
-	public static TableModel resultSetToTableModel(ResultSet rs) {
+	public static DefaultTableModel resultSetToTableModel(ResultSet rs) {
 		try {
 		    ResultSetMetaData metaData = rs.getMetaData();
 		    int numberOfColumns = metaData.getColumnCount();

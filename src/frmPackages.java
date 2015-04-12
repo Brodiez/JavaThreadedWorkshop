@@ -82,9 +82,9 @@ public class frmPackages extends JFrame {
 		btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmAddEditPackage addPackge = new frmAddEditPackage(true, selected);
-				addPackge.setLocationRelativeTo(null);
-				addPackge.setVisible(true);
+				frmAddEditPackage addEditPackage = new frmAddEditPackage(true, selected);
+				addEditPackage.setLocationRelativeTo(null);
+				addEditPackage.setVisible(true);
 				frmPackages.this.dispose();
 			}
 		});
@@ -97,10 +97,10 @@ public class frmPackages extends JFrame {
 				try {
 					if(tblPackages.getSelectedRow() != -1) {
 						selected = PackagesDB.getPackage((int) packages.getValueAt(tblPackages.getSelectedRow(), 0));
-						frmAddEditPackage editPackage = new frmAddEditPackage(false, selected);
-						editPackage.setLocationRelativeTo(null);
+						frmAddEditPackage addEditPackage = new frmAddEditPackage(false, selected);
+						addEditPackage.setLocationRelativeTo(null);
 
-						editPackage.setVisible(true);
+						addEditPackage.setVisible(true);
 						frmPackages.this.dispose();
 
 					}
@@ -189,10 +189,10 @@ public class frmPackages extends JFrame {
 			//tblPackages.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 			//autoResizeColumns(tblPackages);
 
-			fixWidth(tblPackages, 0, 20);
-			fixWidth(tblPackages, 1, 140);
+			fixWidth(tblPackages, 0, 0);
+			fixWidth(tblPackages, 1, 150);
 			fixWidth(tblPackages, 2, 310);
-			fixWidth(tblPackages, 3, 60);
+			fixWidth(tblPackages, 3, 70);
 			fixWidth(tblPackages, 4, 60);
 
 			
