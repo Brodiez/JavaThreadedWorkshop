@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>Threaded_Project_Phase3_JSP</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>driver</param-name>
+    <param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+    <param-name>conn</param-name>
+    <param-value>jdbc:mysql://localhost:3306/travelexpert</param-value>
+  </context-param>
+  <servlet-mapping>  
+        <servlet-name>login</servlet-name>  
+        <url-pattern>/Login_Servlet</url-pattern>  
+    </servlet-mapping>   
+</web-app>
