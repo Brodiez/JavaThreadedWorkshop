@@ -60,5 +60,10 @@ public class Agent {
 		this.agencyId = agencyId;
 	}
 	
+	@Override
+	public String toString(){
+		return agtFirstName +" "+ agtLastName;
+	}
+	
 	
 }

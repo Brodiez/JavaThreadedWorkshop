@@ -4,11 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Vector;
 
 
 public class AgentDB {
 
-	public Agent getAgent(int id) throws ClassNotFoundException, SQLException
+	public static Agent getAgent(int id) throws ClassNotFoundException, SQLException
 	{
 		Agent agent = new Agent();
 		
@@ -39,7 +40,7 @@ public class AgentDB {
 		}
 		
 	}
-	public ArrayList<Agent> getAgents() throws ClassNotFoundException, SQLException 
+	public static Vector<Agent> getAgents() throws ClassNotFoundException, SQLException 
 	{
 		
 		
@@ -48,7 +49,7 @@ public class AgentDB {
 		
 		try 
 		{
-			ArrayList<Agent> alist = new ArrayList<Agent>();
+			Vector<Agent> alist = new Vector<Agent>();
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery(sql);
 			
@@ -75,11 +76,11 @@ public class AgentDB {
 		}
 
 	}
-	public void createAgent(Agent agent) throws ClassNotFoundException, SQLException
+	public static void createAgent(Agent agent) throws ClassNotFoundException, SQLException
 	{
 		
 		Connection conn = TravelExpertsDB.Connect();
-		String sql = "INSERT into Agents (AgtFirstName, AgtMiddleName, AgtLastName, AgtBusPhone, AgtEmail, AgtPosition, AgencyId)"
+		String sql = "INSERT into Agents (AgtFirstName, AgtMiddleInitial, AgtLastName, AgtBusPhone, AgtEmail, AgtPosition, AgencyId)"
 					+ "values (?,?,?,?,?,?,?)";
 		
 		PreparedStatement stmt = conn.prepareStatement(sql);
@@ -96,11 +97,11 @@ public class AgentDB {
 		conn.close();
 	}
 	
-	public boolean updateAgent(Agent newAgent, Agent oldAgent) throws ClassNotFoundException, SQLException {
+	public static boolean updateAgent(Agent newAgent, Agent oldAgent) throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
 		
-		String sql = "Update Agents set AgtFirstName = ?, AgtMiddleName = ?, AgtLastName = ?, "
+		String sql = "Update Agents set AgtFirstName = ?, AgtMiddleInitial = ?, AgtLastName = ?, "
 				+ "AgtBusPhone = ?, AgtEmail = ?, AgtPosition = ?, AgencyId = ? " +
 				"WHERE AgentId = ?";
 		
