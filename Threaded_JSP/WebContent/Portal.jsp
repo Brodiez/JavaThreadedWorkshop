@@ -20,8 +20,8 @@
 
 <%@page import = "java.sql.*, java.io.*" %>
 <%
-	String custFName = request.getParameter("username");
-	String custLName = request.getParameter("userpass");
+	String custFName = (String)session.getAttribute("fName");
+	String custLName = (String)session.getAttribute("lName");
 
 				
 		try
@@ -81,7 +81,7 @@
 				out.print("<tr>");
 				out.print("<td><div align='left'><b>*City:</b></div></td>");
 				out.print("<td><div align='left'>");
-				out.print("<input name='CustCity' type='text' id='Custcity' value='" + rs.getString(5) + "'DISABLED></div>");
+				out.print("<input name='CustCity' type='text' id='CustCity' value='" + rs.getString(5) + "'DISABLED></div>");
 				out.print("</td>");
 				out.print("</tr>");
 				
@@ -99,7 +99,7 @@
 				out.print("<div align='left' id='label'><b>*Country:</b></div>");
 				out.print("</td>");
 				out.print("<td>");
-				out.print("<input name='CustCity' type='text' id='CustCity' value='" + rs.getString(8) + "'DISABLED></div>");
+				out.print("<input name='CustCountry' type='text' id='CustCountry' value='" + rs.getString(8) + "'DISABLED></div>");
 				out.print("</td>");
 				
 				out.print("<tr>");
@@ -172,9 +172,9 @@
 		document.getElementById('CustFirstName').onclick = enablefild;
 		document.getElementById('CustLastName').onclick = enablefild;
 		document.getElementById('CustAddress').onclick = enablefild;
-		document.getElementById('Custcity').onclick = enablefild;
-		document.getElementById('CustProv').onclick = enablefild;
 		document.getElementById('CustCity').onclick = enablefild;
+		document.getElementById('CustProv').onclick = enablefild;
+		document.getElementById('CustCountry').onclick = enablefild;
 		document.getElementById('CustPostal').onclick = enablefild;
 		document.getElementById('CustHomePhone').onclick = enablefild;
 		document.getElementById('CustBusPhone').onclick = enablefild;
@@ -194,8 +194,8 @@
 		if (document.getElementById('CustAddress').checked == false){
 			document.getElementById('CustAddress').disabled = false;
 		}
-		if (document.getElementById('Custcity').checked == false){
-			document.getElementById('Custcity').disabled = false;
+		if (document.getElementById('CustCountry').checked == false){
+			document.getElementById('CustCountry').disabled = false;
 		}
 		if (document.getElementById('CustProv').checked == false){
 			document.getElementById('CustProv').disabled = false;

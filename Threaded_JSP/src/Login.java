@@ -56,7 +56,7 @@ public class Login {
 		}
 		return status;
 	}
-	public static boolean updateCustomer(String FirstName, String LastName, String Address, String City, String Province, String Country, String HPhone, String BPhone, String Email, String Postal)
+	public static boolean updateCustomer(String FirstName, String LastName, String Address, String City, String Province, String Country, String Postal, String HPhone, String BPhone, String Email)
 	{
 		boolean status = false;
 		Connection conn = null;
@@ -85,15 +85,23 @@ public class Login {
 			pStmt.setString(9, Email);
 			pStmt.setString(10, FirstName);
 			
-			PreparedStatement pstmt = conn.prepareStatement(updateSql);
-			pstmt.execute();
+			int i;
+			i = pStmt.executeUpdate();
 			//Close Prepared Statement and set it to null
-			pstmt.close();
-			pstmt = null;
+			pStmt.close();
+			pStmt = null;
 			
 			//Close Connection and set it to null
 			conn.close();
 			conn = null;
+			if (i > 0)
+			{
+				return true;
+			}
+			else
+				return false;
+			
+			
 		}catch (Exception ex)
 		{
 			System.out.println(ex);

@@ -42,12 +42,24 @@ public class Update_Customer extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		String f = request.getParameter("CustFirstName");
+		System.out.println("Hello There "+request.getParameter("CustFirstName"));
+		
 		String l = request.getParameter("CustLastName");
+		System.out.println("Hello There "+request.getParameter("CustLastName"));
+		
 		String a = request.getParameter("CustAddress");
-		String ci = request.getParameter("Custcity");
+		System.out.println("Hello There "+request.getParameter("CustAddress"));
+		
+		String ci = request.getParameter("CustCity");
+		System.out.println("Hello There "+request.getParameter("CustCity"));
+		
 		String pr = request.getParameter("CustProv");
-		String co = request.getParameter("CustCity");
+		System.out.println("Hello There "+request.getParameter("CustProv"));
+		
+		String co = request.getParameter("CustCountry");
+		System.out.println("Hello There "+request.getParameter("CustCountry"));
 		String po = request.getParameter("CustPostal");
+		System.out.println("Hello There "+request.getParameter("CustPostal"));
 		String hp = request.getParameter("CustHomePhone");
 		String bp = request.getParameter("CustBusPhone");
 		String em = request.getParameter("CustEmail");
@@ -58,22 +70,18 @@ public class Update_Customer extends HttpServlet {
 			session.setAttribute("CustFirstName", f);
 			session.setAttribute("CustLastName", l);
 			session.setAttribute("CustAddress", a);
-			session.setAttribute("Custcity", ci);
+			session.setAttribute("CustCity", ci);
 			session.setAttribute("CustProv", pr);
-			session.setAttribute("CustCity", co);
+			session.setAttribute("CustCountry", co);
 			session.setAttribute("CustPostal", po);
 			session.setAttribute("CustHomePhone", hp);
 			session.setAttribute("CustBusPhone", bp);
 			session.setAttribute("CustEmail", em);
 		}	
 		if(Login.updateCustomer(f, l, a, ci, pr, co, po, hp, bp, em)){
+			System.out.println("Customer Updated PROPERLY");
 			RequestDispatcher rd = request.getRequestDispatcher("Portal.jsp");
 			rd.forward(request, response);
-		}
-		else{
-			out.print("<p style=\"color:red\">Sorry username or password error</p>");
-			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-			rd.include(request, response);
 		}
 	}
 
