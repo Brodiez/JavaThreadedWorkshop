@@ -1,21 +1,61 @@
-<%-- <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<body>
+<%@page import = "java.sql.*" %>
+<%
+	String custFName = request.getParameter("username");
+	String custLName = request.getParameter("userpass");
+	
+	try
+	{
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts","root","");
+		String selectSQL = "select * from Customers where CustFirstName=? AND CustLastName=?";
+		PreparedStatement pStmt = conn.prepareStatement(selectSQL);
+		pStmt.setString(1 , custFName);
+		pStmt.setString(2, custLName);
+		ResultSet rs = pStmt.executeQuery();
+	
+		if(rs.next())
+		{
+			
+			%><jsp:include page="index.jsp"/><%
+			out.print("<form name='NewCustomerForm' method='post' action=''>");
+			out.print("<table width='600' border='0' aligh='center' cellpadding='0' cellspacing='5'");
+			out.print("<tr>");
+			out.print("<caption>Customer Modification</caption>");
+			out.print("</tr>");
+			out.print("<tr>");
+			out.print("<td colspan='2'><h6><i>Required Fields Indicated With a *</i></h6></td>");
+			out.print("</tr>");
+			out.print("<tr>");
+			out.print("<td width='110'><div align='left'><b>*First Name:</b></div>");
+			out.print("</td>");
+			out.print("<td><div align='left'>");
+			out.print("<input name='CustFirstName' type='text' id='CustFirstName' value='" + rs.getString(2) + "'></div>"); 
+			out.print("</td>");
+			out.print("<td width='110'><div align='left'><b>*Last Name:</b></div></td>");
+			out.print("<td><div align='left'>");
+			out.print("<input name='CustLastName' type='text' id='CustLastName' value='" + rs.getString(3) + "'></div>");
+			out.print("</td>");
+			out.print("</tr>");
+			out.print("</div>");
+			out.print("</table>");
+			out.print("</form>");
+			
+		}
+		else 
+		{
+		    out.println("Customer Not in the DB....");
+		}
+		} catch (Exception ex) 
+		{
+			System.out.println(ex);
+		}
+%>
 
-</body>
-</html> --%>
-
-<%	
+<%-- <%	
 	String custFName = request.getParameter("name");
 	String custLName = request.getParameter("name1");
 	Class.forName("com.mysql.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts1","root","");
+	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts","root","");
 	String selectSql = "select * from Customers where CustFirstName=? and CustLastName=?";
 	pStmt = conn.prepareStatement(selectSql);
 	pStmt.setString(1, custFName);
@@ -138,6 +178,7 @@
 		out.print("<td>");
 		out.print("<div align='left' id='label'><b>*Province:</b></div>");
 		out.print("</td>");
+		
 		out.print("<td>");
 		out.print("<div align='left' id='region'>");
 		out.print("<select name='CustProv'  id='CustProv' DISABLED>");
@@ -377,4 +418,4 @@
 </div>
 
 </body>
-</html>	
+</html>	 --%>

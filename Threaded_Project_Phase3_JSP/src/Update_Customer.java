@@ -12,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class Login_Servlet
+ * Servlet implementation class Update_Customer
  */
-@WebServlet("/Login_Servlet")
-public class Login_Servlet extends HttpServlet {
+@WebServlet("/Update_Customer")
+public class Update_Customer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Login_Servlet() {
+    public Update_Customer() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,7 +31,7 @@ public class Login_Servlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doPost(request,response);
+		doPost(request, response);
 	}
 
 	/**
@@ -41,16 +41,32 @@ public class Login_Servlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+		String f = request.getParameter("CustFirstName");
+		String l = request.getParameter("CustLastName");
+		String a = request.getParameter("CustAddress");
+		String ci = request.getParameter("Custcity");
+		String pr = request.getParameter("CustProv");
+		String co = request.getParameter("CustCity");
+		String po = request.getParameter("CustPostal");
+		String hp = request.getParameter("CustHomePhone");
+		String bp = request.getParameter("CustBusPhone");
+		String em = request.getParameter("CustEmail");
 		
-		String n = request.getParameter("username");
-		String p = request.getParameter("userpass");
 		
 		HttpSession session = request.getSession();
 		if(session!=null){
-			session.setAttribute("fName", n);
-			session.setAttribute("lName", p);
+			session.setAttribute("CustFirstName", f);
+			session.setAttribute("CustLastName", l);
+			session.setAttribute("CustAddress", a);
+			session.setAttribute("Custcity", ci);
+			session.setAttribute("CustProv", pr);
+			session.setAttribute("CustCity", co);
+			session.setAttribute("CustPostal", po);
+			session.setAttribute("CustHomePhone", hp);
+			session.setAttribute("CustBusPhone", bp);
+			session.setAttribute("CustEmail", em);
 		}	
-		if(Login.validate(n, p)){
+		if(Login.updateCustomer(f, l, a, ci, pr, co, po, hp, bp, em)){
 			RequestDispatcher rd = request.getRequestDispatcher("Portal.jsp");
 			rd.forward(request, response);
 		}
@@ -59,7 +75,6 @@ public class Login_Servlet extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 			rd.include(request, response);
 		}
-		out.close();
 	}
 
 }
