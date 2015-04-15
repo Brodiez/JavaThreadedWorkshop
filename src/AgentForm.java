@@ -15,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -140,20 +142,12 @@ public class AgentForm extends JFrame {
 		cbAgencyId.setEnabled(false);
 
 		//pulling data from database for the agent form
-		Vector<Agent> agents = null;
-		try {
-			agents = AgentDB.getAgents();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		
-		JComboBox<Agent> comboBox = new JComboBox<Agent>(agents);
+		JComboBox<Agent> comboBox = new JComboBox<Agent>(loadComboBox());
 		comboBox.setBounds(143, 75, 174, 22);
 		contentPane.add(comboBox);
+		setAgent(comboBox_1, cbAgencyId, comboBox);
 		
 		//set agent combo box with database values
 		comboBox.addActionListener(new ActionListener(){
@@ -161,13 +155,17 @@ public class AgentForm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Agent agt = (Agent)comboBox.getSelectedItem();
-				txtFName.setText(agt.getAgtFirstName());
-				txtMInit.setText(agt.getAgtMiddleInitial());
-				txtLName.setText(agt.getAgtLastName());
-				txtBusPhone.setText(agt.getAgtBusPhone());
-				txtEmail.setText(agt.getAgtEmail());
-				cbAgencyId.setSelectedItem(String.valueOf(agt.getAgencyId()));
-				comboBox_1.setSelectedItem(agt.getAgtPosition());
+				try {
+					agt = AgentDB.getAgent(agt.getAgentId());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				setAgent(comboBox_1, cbAgencyId, comboBox);
 			}
 
 		}
@@ -175,6 +173,7 @@ public class AgentForm extends JFrame {
 		JButton btnClear = new JButton("Clear");
 		btnClear.setBounds(142, 384, 76, 25);
 		contentPane.add(btnClear);
+		btnClear.setEnabled(false);
 			
 		JButton btnAdd = new JButton("Add");
 		btnAdd.setBounds(39, 32, 76, 25);
@@ -188,12 +187,17 @@ public class AgentForm extends JFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.setBounds(230, 384, 87, 25);
 		contentPane.add(btnSave);
+		btnSave.setEnabled(false);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setBounds(329, 384, 87, 25);
+		contentPane.add(btnCancel);
 		
 		//listeners added to buttons
-		btnEdit.addMouseListener(new MouseListener(){
+		btnEdit.addActionListener(new ActionListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				 add = false;
 				 txtFName.setEnabled(true);
 				 txtMInit.setEnabled(true);
@@ -205,40 +209,15 @@ public class AgentForm extends JFrame {
 				 comboBox_1.setEnabled(true);
 				 btnClear.setEnabled(false);
 				 btnAdd.setEnabled(false);
-				 
+				 btnSave.setEnabled(true);
 			}
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			
 		});
 		
-		btnAdd.addMouseListener(new MouseListener(){
+		btnAdd.addActionListener(new ActionListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				add = true;
 				txtFName.setEnabled(true);
 				txtMInit.setEnabled(true);
@@ -249,43 +228,24 @@ public class AgentForm extends JFrame {
 				comboBox.setEnabled(false);
 				comboBox_1.setEnabled(true);
 				btnEdit.setEnabled(false);
+				btnSave.setEnabled(true);
+				btnClear.setEnabled(true);
 				Clear();
 				
 			}
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-
 		});
 		
 
-		btnSave.addMouseListener(new MouseListener(){
-
+		btnSave.addActionListener(new ActionListener(){
+			
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void actionPerformed(ActionEvent e) {
+
 				if (add == true){
+					
+					if (checkInactive(comboBox_1.getSelectedItem().toString()) == false)
+					{
 					Agent agt = new Agent();
 					agt.setAgtFirstName(txtFName.getText());
 					agt.setAgtMiddleInitial(txtMInit.getText());
@@ -303,11 +263,74 @@ public class AgentForm extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					comboBox.addItem(agt);
+					comboBox.setSelectedItem(agt);
 					
-					
+					btnAdd.setEnabled(true);
+					btnEdit.setEnabled(true);
+					comboBox.setEnabled(true);
+					txtFName.setEnabled(false);
+					txtMInit.setEnabled(false);
+					txtLName.setEnabled(false);
+					txtBusPhone.setEnabled(false);
+					txtEmail.setEnabled(false);
+					cbAgencyId.setEnabled(false);
+					comboBox_1.setEnabled(false);
+					btnSave.setEnabled(false);
+					btnClear.setEnabled(false);
+					}
+					else{
+						JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent. retard.");
+					}
 				}
-				else 
+				else
 				{
+					if (checkInactive(comboBox_1.getSelectedItem().toString()) == true){
+						int answer = JOptionPane.showConfirmDialog(AgentForm.this, "Are you sure you wish to make this Agent Inactive?","Confirm",JOptionPane.YES_NO_OPTION);
+						if (answer == JOptionPane.YES_OPTION){
+						ChangeAgent uCustAgt = new ChangeAgent();
+						uCustAgt.agtint=((Agent)comboBox.getSelectedItem()).getAgencyId();
+						uCustAgt.setLocationRelativeTo(null);
+						uCustAgt.setVisible(true);
+						
+						Agent agt = (Agent)comboBox.getSelectedItem();
+						Agent newAgt = new Agent();
+						newAgt.setAgtFirstName(txtFName.getText());
+						newAgt.setAgtMiddleInitial(txtMInit.getText());
+						newAgt.setAgtLastName(txtLName.getText());
+						newAgt.setAgtBusPhone(txtBusPhone.getText());
+						newAgt.setAgtEmail(txtEmail.getText());
+						newAgt.setAgtPosition(comboBox_1.getSelectedItem().toString());
+						newAgt.setAgencyId(Integer.parseInt(cbAgencyId.getSelectedItem().toString()));
+						try {
+							AgentDB.updateAgent(newAgt,agt);
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						comboBox.setModel(new JComboBox<Agent>(loadComboBox()).getModel());
+						setAgent(comboBox_1, cbAgencyId, comboBox);
+						
+						btnAdd.setEnabled(true);
+						btnEdit.setEnabled(true);
+						comboBox.setEnabled(true);
+						txtFName.setEnabled(false);
+						txtMInit.setEnabled(false);
+						txtLName.setEnabled(false);
+						txtBusPhone.setEnabled(false);
+						txtEmail.setEnabled(false);
+						cbAgencyId.setEnabled(false);
+						comboBox_1.setEnabled(false);
+						btnSave.setEnabled(false);
+						btnClear.setEnabled(false);
+						}
+						
+					}
+					else{
+					
 					Agent agt = (Agent)comboBox.getSelectedItem();
 					Agent newAgt = new Agent();
 					newAgt.setAgtFirstName(txtFName.getText());
@@ -326,7 +349,38 @@ public class AgentForm extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					comboBox.setModel(new JComboBox<Agent>(loadComboBox()).getModel());
+					setAgent(comboBox_1, cbAgencyId, comboBox);
+					
+
+					btnAdd.setEnabled(true);
+					btnEdit.setEnabled(true);
+					comboBox.setEnabled(true);
+					txtFName.setEnabled(false);
+					txtMInit.setEnabled(false);
+					txtLName.setEnabled(false);
+					txtBusPhone.setEnabled(false);
+					txtEmail.setEnabled(false);
+					cbAgencyId.setEnabled(false);
+					comboBox_1.setEnabled(false);
+					btnSave.setEnabled(false);
+					btnClear.setEnabled(false);
+					
+					}
+					}
 				}
+
+			
+
+			
+		});
+		
+		btnCancel.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBox.setModel(new JComboBox<Agent>(loadComboBox()).getModel());
+				setAgent(comboBox_1, cbAgencyId, comboBox);
 				btnAdd.setEnabled(true);
 				btnEdit.setEnabled(true);
 				comboBox.setEnabled(true);
@@ -337,70 +391,64 @@ public class AgentForm extends JFrame {
 				txtEmail.setEnabled(false);
 				cbAgencyId.setEnabled(false);
 				comboBox_1.setEnabled(false);
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
+				btnSave.setEnabled(false);
+				btnClear.setEnabled(false);
 				
 			}
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}	
-			
 		});
 		
-		btnClear.addMouseListener(new MouseListener(){
+		btnClear.addActionListener(new ActionListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				Clear();
-				
+			public void actionPerformed(ActionEvent e) {
+				Clear();	
 			}
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
 		});
 		
-		
+//		comboBox_1.addActionListener(new ActionListener(){
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if (comboBox_1.getSelectedItem()== "Inactive" && add == false){
+//					ChangeAgent uCustAgt = new ChangeAgent();
+//					uCustAgt.agtint=((Agent)comboBox.getSelectedItem()).getAgencyId();
+//					uCustAgt.setLocationRelativeTo(null);
+//					uCustAgt.setVisible(true);
+//				}
+//				else if (comboBox_1.getSelectedItem()== "Inactive" && add == true){
+//					JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent. retard.");
+//				}
+//				
+//			}
+//			
+//			
+//		});
 
+
+	}
+	
+	public boolean checkInactive(String inactive){
+		if ( inactive == "Inactive" ){
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	public void setAgent(JComboBox comboBox_1, JComboBox cbAgencyId,
+			JComboBox<Agent> comboBox) {
+		Agent agt = (Agent)comboBox.getSelectedItem();
+		txtFName.setText(agt.getAgtFirstName());
+		txtMInit.setText(agt.getAgtMiddleInitial());
+		txtLName.setText(agt.getAgtLastName());
+		txtBusPhone.setText(agt.getAgtBusPhone());
+		txtEmail.setText(agt.getAgtEmail());
+		cbAgencyId.setSelectedItem(String.valueOf(agt.getAgencyId()));
+		comboBox_1.setSelectedItem(agt.getAgtPosition());
 	}
 	public void Clear(){
 		txtFName.setText("");
@@ -409,5 +457,19 @@ public class AgentForm extends JFrame {
 		txtBusPhone.setText("");
 		txtEmail.setText("");
 
+	}
+	
+	public static Vector<Agent> loadComboBox(){
+		Vector<Agent> agents = null;
+		try {
+			agents = AgentDB.getAgents();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return agents;
 	}
 }

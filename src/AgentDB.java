@@ -137,14 +137,15 @@ public class AgentDB {
 			
 	}
 	
-	public boolean deleteAgent(Agent agent) throws ClassNotFoundException, SQLException {
+	public static boolean UpdateAgentCustomers(Integer oldagt,Integer newagt) throws ClassNotFoundException, SQLException {
 		
 		Connection conn = TravelExpertsDB.Connect();
 		
-		String sql = "Delete from Agents WHERE agentId = ?";
+		String sql = "Update Customers set agentId = ? WHERE agentId = ?";
 		try{
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,agent.getAgentId());
+			pstmt.setInt(1,oldagt);
+			pstmt.setInt(2,newagt);
 			int count = pstmt.executeUpdate();
 			if(count > 0)
 				return true;
