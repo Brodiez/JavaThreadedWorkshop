@@ -55,7 +55,7 @@ public class AgentForm extends JFrame {
 	public AgentForm() {
 		
 		
-		
+		//Defined Design fields
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 526, 508);
 		contentPane = new JPanel();
@@ -240,18 +240,20 @@ public class AgentForm extends JFrame {
 
 		});
 		
-
+		
 		btnSave.addActionListener(new ActionListener(){
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				//check if adding new agent
 				if (add == true){
-					
+					//check inactive position
 					if (checkInactive(comboBox_1.getSelectedItem().toString()) == false)
 					{
 					Agent agt = new Agent();
+					//validate inputs
 					if (validator()){
+						//set inputs
 					agt.setAgtFirstName(txtFName.getText());
 					agt.setAgtMiddleInitial(txtMInit.getText());
 					agt.setAgtLastName(txtLName.getText());
@@ -259,6 +261,7 @@ public class AgentForm extends JFrame {
 					agt.setAgtEmail(txtEmail.getText());
 					agt.setAgtPosition(comboBox_1.getSelectedItem().toString());
 					agt.setAgencyId(Integer.parseInt(cbAgencyId.getSelectedItem().toString()));
+					//try to insert
 					try {
 						AgentDB.createAgent(agt);
 					} catch (ClassNotFoundException e1) {
@@ -270,7 +273,7 @@ public class AgentForm extends JFrame {
 					}
 					comboBox.addItem(agt);
 					comboBox.setSelectedItem(agt);
-					
+					//set fields back to defaults for view
 					btnAdd.setEnabled(true);
 					btnEdit.setEnabled(true);
 					comboBox.setEnabled(true);
@@ -286,19 +289,22 @@ public class AgentForm extends JFrame {
 					}
 					}
 					else{
-						JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent. retard.");
+						
+						JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent, No Customer Data associated with this.");
 					}
 				}
 				else
 				{
+					//editing and checking if position set to inActive
 					if (checkInactive(comboBox_1.getSelectedItem().toString()) == true){
+						//confirm inactive status
 						int answer = JOptionPane.showConfirmDialog(AgentForm.this, "Are you sure you wish to make this Agent Inactive?","Confirm",JOptionPane.YES_NO_OPTION);
 						if (answer == JOptionPane.YES_OPTION){
 						ChangeAgent uCustAgt = new ChangeAgent();
 						uCustAgt.agtint=((Agent)comboBox.getSelectedItem()).getAgencyId();
 						uCustAgt.setLocationRelativeTo(null);
 						uCustAgt.setVisible(true);
-						
+						//set agt and try update
 						Agent agt = (Agent)comboBox.getSelectedItem();
 						Agent newAgt = new Agent();
 						if (validator()){
@@ -320,7 +326,7 @@ public class AgentForm extends JFrame {
 						}
 						comboBox.setModel(new JComboBox<Agent>(loadComboBox()).getModel());
 						setAgent(comboBox_1, cbAgencyId, comboBox);
-						
+						//set to default
 						btnAdd.setEnabled(true);
 						btnEdit.setEnabled(true);
 						comboBox.setEnabled(true);
@@ -337,7 +343,7 @@ public class AgentForm extends JFrame {
 						}
 					}
 					else{
-					
+					//update when not inactive
 					Agent agt = (Agent)comboBox.getSelectedItem();
 					Agent newAgt = new Agent();
 					if (validator()){
@@ -439,6 +445,7 @@ public class AgentForm extends JFrame {
 		}
 		
 	}
+	//set display agent
 	public void setAgent(JComboBox comboBox_1, JComboBox cbAgencyId,
 			JComboBox<Agent> comboBox) {
 		Agent agt = (Agent)comboBox.getSelectedItem();
