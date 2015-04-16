@@ -247,6 +247,7 @@ public class AgentForm extends JFrame {
 					if (checkInactive(comboBox_1.getSelectedItem().toString()) == false)
 					{
 					Agent agt = new Agent();
+					if (validator()){
 					agt.setAgtFirstName(txtFName.getText());
 					agt.setAgtMiddleInitial(txtMInit.getText());
 					agt.setAgtLastName(txtLName.getText());
@@ -279,6 +280,7 @@ public class AgentForm extends JFrame {
 					btnSave.setEnabled(false);
 					btnClear.setEnabled(false);
 					}
+					}
 					else{
 						JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent. retard.");
 					}
@@ -295,6 +297,7 @@ public class AgentForm extends JFrame {
 						
 						Agent agt = (Agent)comboBox.getSelectedItem();
 						Agent newAgt = new Agent();
+						if (validator()){
 						newAgt.setAgtFirstName(txtFName.getText());
 						newAgt.setAgtMiddleInitial(txtMInit.getText());
 						newAgt.setAgtLastName(txtLName.getText());
@@ -327,12 +330,13 @@ public class AgentForm extends JFrame {
 						btnSave.setEnabled(false);
 						btnClear.setEnabled(false);
 						}
-						
+						}
 					}
 					else{
 					
 					Agent agt = (Agent)comboBox.getSelectedItem();
 					Agent newAgt = new Agent();
+					if (validator()){
 					newAgt.setAgtFirstName(txtFName.getText());
 					newAgt.setAgtMiddleInitial(txtMInit.getText());
 					newAgt.setAgtLastName(txtLName.getText());
@@ -369,7 +373,7 @@ public class AgentForm extends JFrame {
 					}
 					}
 				}
-
+			}
 			
 
 			
@@ -406,25 +410,6 @@ public class AgentForm extends JFrame {
 			}
 
 		});
-		
-//		comboBox_1.addActionListener(new ActionListener(){
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				if (comboBox_1.getSelectedItem()== "Inactive" && add == false){
-//					ChangeAgent uCustAgt = new ChangeAgent();
-//					uCustAgt.agtint=((Agent)comboBox.getSelectedItem()).getAgencyId();
-//					uCustAgt.setLocationRelativeTo(null);
-//					uCustAgt.setVisible(true);
-//				}
-//				else if (comboBox_1.getSelectedItem()== "Inactive" && add == true){
-//					JOptionPane.showMessageDialog(AgentForm.this, "This is a new agent. retard.");
-//				}
-//				
-//			}
-//			
-//			
-//		});
 
 
 	}
@@ -471,5 +456,14 @@ public class AgentForm extends JFrame {
 			e.printStackTrace();
 		}
 		return agents;
+	}
+	
+	public boolean validator(){
+		return (Validation.isPresent(txtFName) &&
+				Validation.isPresent(txtLName) &&
+				Validation.isPresent(txtBusPhone) &&
+				Validation.isPresent(txtEmail));
+
+
 	}
 }
