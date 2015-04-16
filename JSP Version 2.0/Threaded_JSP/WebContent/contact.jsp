@@ -15,13 +15,15 @@
 		<div align="right">
 		
 			<a href="index.jsp" onmouseover="mouseOver()" onmouseout="mouseOut()"><img src="images/homebut.gif" name="b1" border="0"></a>
-						
-			<a href="packages.jsp" onmouseover="mouseOver2()" onmouseout="mouseOut2()"><img src="images/packagebut.gif" name="b2" border="0"></a>
 			
+			<a href="packages.jsp" onmouseover="mouseOver2()" onmouseout="mouseOut2()"><img src="images/packagebut.gif" name="b2" border="0"></a>
+
 			<a href="Customer_Registration.jsp" onmouseover="mouseOver3()" onmouseout="mouseOut3()"><img src="images/registerbut.gif" name="b3" border="0"></a>
-						
+			
 			<a href="contact.jsp" onmouseover="mouseOver4()" onmouseout="mouseOut4()"><img src="images/contactbut.gif" name="b4" border="0"></a>
-						
+			
+			<a href="links.jsp" onmouseover="mouseOver5()" onmouseout="mouseOut5()"><img src="images/linksbut.gif" name="b5" border="0"></a>
+
 		</div>
 		
 	</div>
@@ -36,10 +38,10 @@
 <%
     try
     {
-        //Class.forName("com.mysql.jdbc.Driver");
-		Class.forName("oracle.jdbc.driver.OracleDriver");
-        //Connection dbConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts","root","password");
-        Connection dbConn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orant11g", "ictoosd", "ictoosd");
+        Class.forName("com.mysql.jdbc.Driver");
+		//Class.forName("oracle.jdbc.driver.OracleDriver");
+        Connection dbConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/travelexperts","root","");
+        //Connection dbConn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orant11g", "ictoosd", "ictoosd");
 
         Statement stmt = dbConn.createStatement();
 
@@ -47,9 +49,8 @@
 
         ResultSet rs = stmt.executeQuery(strSQL);
 
-        // (5) Process the result set.
 
-        ResultSetMetaData rsmd = rs.getMetaData(); // get descriptive data about the result set
+        ResultSetMetaData rsmd = rs.getMetaData(); 
 
         int nCol = rsmd.getColumnCount();
 
@@ -89,7 +90,7 @@
 		
 		<span>||</span>
 		
-		<a href="register.jsp">Registration</a>
+		<a href="Customer_Registration.jsp">Registration</a>
 		
 		<span>||</span>
 		
