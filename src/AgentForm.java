@@ -193,6 +193,10 @@ public class AgentForm extends JFrame {
 		btnCancel.setBounds(329, 384, 87, 25);
 		contentPane.add(btnCancel);
 		
+		JButton btnClose = new JButton("Close");
+		btnClose.setBounds(142, 422, 76, 25);
+		contentPane.add(btnClose);
+		
 		//listeners added to buttons
 		btnEdit.addActionListener(new ActionListener(){
 
@@ -409,6 +413,17 @@ public class AgentForm extends JFrame {
 				Clear();	
 			}
 
+		});
+		
+		btnClose.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				AgentForm.this.dispose();
+				
+			}
+			
+			
 		});
 
 
